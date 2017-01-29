@@ -1,0 +1,2 @@
+include README.rst
+recursive-include ckanext/twitter_feeds *.html *.json *.js *.less *.css *.mo

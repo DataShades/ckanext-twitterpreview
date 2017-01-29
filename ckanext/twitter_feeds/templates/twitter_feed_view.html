@@ -1,0 +1,15 @@
+{% for feed in resource.twitt_feeds %}
+{{ feed.name }}
+    <div>
+        <div>
+            <a href="https://twitter.com/{{ feed.user.screen_name }}">
+                <img src="{{ feed.user.profile_image_url }}" style="float: left">
+                <strong>{{ feed.user.name }}</strong>
+            </a>
+            <span><s>@</s><b>{{ feed.user.screen_name }}</b></span>
+            <p>
+                {{ feed.text }}
+            </p>
+        </div>
+    </div>
+{% endfor %}
