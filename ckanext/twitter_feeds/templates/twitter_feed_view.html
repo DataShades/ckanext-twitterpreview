@@ -1,15 +1,21 @@
+<h2>{{ resource.twitt_feeds_count }} Twitter Feeds</h2>
 {% for feed in resource.twitt_feeds %}
-{{ feed.name }}
-    <div>
-        <div>
-            <a href="https://twitter.com/{{ feed.user.screen_name }}">
-                <img src="{{ feed.user.profile_image_url }}" style="float: left">
+    <div style="border-bottom: 1px solid #e1e8ed">
+    <div class="twitter-feeds-content" style="min-height: 55px; margin-left: 55px; margin-top: 10px">
+            <a href="https://twitter.com/{{ feed.user.screen_name }}" target="_blank" style="color: #292f33"s>
+                <img src="{{ feed.user.profile_image_url }}" style="float: left; margin-left: -55px; border-radius: 5px">
                 <strong>{{ feed.user.name }}</strong>
+                <span><s style="text-decoration: none; color: #8899a6">@</s><b style="color: #8899a6; font-weight: normal; font-size: 13px">{{ feed.user.screen_name }}</b></span>
             </a>
-            <span><s>@</s><b>{{ feed.user.screen_name }}</b></span>
-            <p>
-                {{ feed.text }}
-            </p>
-        </div>
+            <span>{{ h.twitter_feed_date(feed.created_at) }}</span>
+            <div>
+                <a href="https://twitter.com/{{ feed.user.screen_name }}/status/{{ feed.id }}" target="_blank" style="color: #292f33; text-decoration: none">
+                    <p style="font-size: 16px; line-height: 22px; font-weight: 400;">
+                        {{ feed.text }}
+                    </p>
+                </a>
+            </div>
+    </div>        
     </div>
+
 {% endfor %}

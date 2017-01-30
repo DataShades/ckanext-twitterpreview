@@ -4,15 +4,25 @@ from ckan import plugins as p
 from pylons import config
 
 import twitter
-
+from datetime import datetime
 ignore_empty = p.toolkit.get_validator('ignore_empty')
-DEFAULT_IMAGE_FORMATS = ['twitt']
+DEFAULT_TWIITER_FORMATS = ['twitter feed']
+
+
+def twitter_feed_date(feed_date):
+    date = datetime.strptime(
+        feed_date, "%a %b %d %H:%M:%S +0000 %Y").strftime('%b %d')
+    return date
 
 
 class Twitter_FeedsPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IResourceController, inherit=True)
     plugins.implements(plugins.IResourceView, inherit=True)
+    plugins.implements(plugins.ITemplateHelpers)
+
+    def get_helpers(self):
+        return {'twitter_feed_date': twitter_feed_date}
 
     # IConfigurer
 
@@ -24,22 +34,43 @@ class Twitter_FeedsPlugin(plugins.SingletonPlugin):
     # IResourceController
 
     def before_show(self, resource_dict):
-        if resource_dict['format'] == 'twitt':
+        return resource_dict
+
+    # IResourceView
+
+    def info(self):
+        return {'name': 'twitter_feed_view',
+                'title': p.toolkit._('Twitter feeds'),
+                'icon': 'picture',
+                'schema': {'twitter_url': [ignore_empty, unicode]},
+                'iframed': False,
+                'always_available': False,
+                'default_title': p.toolkit._('Twitter feeds'),
+                }
+
+    def can_view(self, data_dict):
+        return (data_dict['resource'].get('format', '').lower()
+                in DEFAULT_TWIITER_FORMATS)
+
+    def view_template(self, context, data_dict):
+        if data_dict['resource']['format'].lower() in DEFAULT_TWIITER_FORMATS:
             feeds = []
-            screen_name = resource_dict['url'].split('/')
+            screen_name = data_dict['resource']['url'].split('/')
             api = twitter.api.Api(
                 consumer_key=config.get('ckan.twitter.consumer_key'),
                 consumer_secret=config.get('ckan.twitter.consumer_secret'),
                 access_token_key=config.get('ckan.twitter.access_token_key'),
                 access_token_secret=config.get('ckan.twitter.access_token_secret'))
 
-            twitter_info = api.GetUserTimeline(screen_name=screen_name[3], count=10)
-
+            twitter_info = api.GetUserTimeline(
+                screen_name=screen_name[3],
+                count=config.get('ckan.twitter.max_feeds_count'))
             for feed in twitter_info:
                 feed = {
+                    'id': feed.retweeted_status.id if feed.retweeted_status else feed.id,
                     'created_at': feed.created_at,
                     'retweet_count': feed.retweet_count,
-                    'text': feed.text,
+                    'text': feed.retweeted_status.text if feed.retweeted_status else feed.text,
                     'user': {
                         'id': feed.retweeted_status.user.id if feed.retweeted_status else feed.user.id,
                         'created_at': feed.retweeted_status.user.created_at if feed.retweeted_status else feed.user.created_at,
@@ -51,26 +82,10 @@ class Twitter_FeedsPlugin(plugins.SingletonPlugin):
                     }
                 }
                 feeds.append(feed)
-            resource_dict['twitt_feeds'] = feeds
-        return resource_dict
 
-    # IResourceView
+            data_dict['resource']['twitt_feeds_count'] = len(twitter_info)
+            data_dict['resource']['twitt_feeds'] = feeds
 
-    def info(self):
-        return {'name': 'twitt',
-                'title': p.toolkit._('Twitt'),
-                'icon': 'picture',
-                'schema': {'twitter_url': [ignore_empty, unicode]},
-                'iframed': False,
-                'always_available': False,
-                'default_title': p.toolkit._('Twitt'),
-                }
-
-    def can_view(self, data_dict):
-        return (data_dict['resource'].get('format', '').lower()
-                in DEFAULT_IMAGE_FORMATS)
-
-    def view_template(self, context, data_dict):
         return 'twitter_feed_view.html'
 
     def form_template(self, context, data_dict):
