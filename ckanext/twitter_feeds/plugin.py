@@ -5,8 +5,17 @@ from pylons import config
 
 import twitter
 from datetime import datetime
+import ckan.logic as logic
+
 ignore_empty = p.toolkit.get_validator('ignore_empty')
 DEFAULT_TWIITER_FORMATS = ['twitter feed']
+
+twitter_api = twitter.api.Api(
+    consumer_key=config.get('ckan.twitter.consumer_key'),
+    consumer_secret=config.get('ckan.twitter.consumer_secret'),
+    access_token_key=config.get('ckan.twitter.access_token_key'),
+    access_token_secret=config.get('ckan.twitter.access_token_secret')
+)
 
 
 def twitter_feed_date(feed_date):
@@ -15,14 +24,39 @@ def twitter_feed_date(feed_date):
     return date
 
 
+def twitter_feed_validation(resource):
+    screen_name = resource['url'].split('/')
+    if resource['format'].lower() in DEFAULT_TWIITER_FORMATS:
+        if not resource['url'].startswith('https://twitter.com'):
+            message = ['This Url is wrong for this resource format. The Url should match for example: "https://twitter.com/USERNAME"']
+            raise logic.ValidationError({"Twitter": message})
+        try:
+            test = twitter_api.GetUserTimeline(
+                screen_name=screen_name[3],
+                count=1)
+        except twitter.TwitterError, e:
+            for m in e.message:
+                message = [m['message']]
+                raise logic.ValidationError({"Twitter": message})
+
+
 class Twitter_FeedsPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IResourceController, inherit=True)
     plugins.implements(plugins.IResourceView, inherit=True)
     plugins.implements(plugins.ITemplateHelpers)
 
+    def before_create(self, context, resource):
+        twitter_feed_validation(resource)
+
+    def before_update(self, context, current, resource):
+        twitter_feed_validation(resource)
+
     def get_helpers(self):
-        return {'twitter_feed_date': twitter_feed_date}
+        return {
+            'twitter_feed_date': twitter_feed_date,
+            'twitter_feed_validation': twitter_feed_validation
+        }
 
     # IConfigurer
 
@@ -56,21 +90,23 @@ class Twitter_FeedsPlugin(plugins.SingletonPlugin):
         if data_dict['resource']['format'].lower() in DEFAULT_TWIITER_FORMATS:
             feeds = []
             screen_name = data_dict['resource']['url'].split('/')
-            api = twitter.api.Api(
-                consumer_key=config.get('ckan.twitter.consumer_key'),
-                consumer_secret=config.get('ckan.twitter.consumer_secret'),
-                access_token_key=config.get('ckan.twitter.access_token_key'),
-                access_token_secret=config.get('ckan.twitter.access_token_secret'))
 
-            twitter_info = api.GetUserTimeline(
+            twitter_info = twitter_api.GetUserTimeline(
                 screen_name=screen_name[3],
                 count=config.get('ckan.twitter.max_feeds_count'))
             for feed in twitter_info:
+                if feed.retweeted_status:
+                    if feed.retweeted_status.media:
+                        text = feed.retweeted_status.text.replace(feed.retweeted_status.media[0].url, '')
+                    if feed.retweeted_status.urls:
+                        text = feed.retweeted_status.text.replace(feed.retweeted_status.urls[0].url, '')
+                else:
+                    text = feed.text
                 feed = {
                     'id': feed.retweeted_status.id if feed.retweeted_status else feed.id,
                     'created_at': feed.created_at,
                     'retweet_count': feed.retweet_count,
-                    'text': feed.retweeted_status.text if feed.retweeted_status else feed.text,
+                    'text': text,
                     'user': {
                         'id': feed.retweeted_status.user.id if feed.retweeted_status else feed.user.id,
                         'created_at': feed.retweeted_status.user.created_at if feed.retweeted_status else feed.user.created_at,

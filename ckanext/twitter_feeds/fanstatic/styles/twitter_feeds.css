@@ -1,0 +1,52 @@
+#twitt-feed-resource-summary {
+  border-bottom: 1px solid #e1e8ed;
+}
+#twitt-feed-resource-summary .twitter-feed-content {
+  min-height: 55px;
+  margin-left: 55px;
+  margin-top: 10px;
+}
+#twitt-feed-resource-summary .twitter-feed-content .twitter-feed-user-link {
+  color: #292f33;
+}
+#twitt-feed-resource-summary .twitter-feed-content .twitter-feed-user-link:hover {
+  text-decoration: none;
+}
+#twitt-feed-resource-summary .twitter-feed-content .twitter-feed-user-link .twitter-feed-user-image {
+  float: left;
+  margin-left: -55px;
+  border-radius: 5px;
+}
+#twitt-feed-resource-summary .twitter-feed-content .twitter-feed-user-link .twitter-feed-username-profile:hover {
+  color: #1b95e0;
+  text-decoration: underline;
+}
+#twitt-feed-resource-summary .twitter-feed-content .twitter-feed-user-link .twitter-feed-username s {
+  text-decoration: none;
+  color: #8899a6;
+}
+#twitt-feed-resource-summary .twitter-feed-content .twitter-feed-user-link .twitter-feed-username b {
+  color: #8899a6;
+  font-weight: normal;
+  font-size: 13px;
+}
+#twitt-feed-resource-summary .twitter-feed-content .twitter-feed-text-content .twitter-feed-post-link {
+  color: #292f33;
+  text-decoration: none;
+}
+#twitt-feed-resource-summary .twitter-feed-content .twitter-feed-text-content .twitter-feed-post-link p {
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 400;
+}
+.label[data-format="twitter feed"],
+.label[data-format*="twitter"] {
+  background-color: #1da1f2;
+}
+.format-label[data-format="twitter feed"],
+.format-label[data-format*="twitter"] {
+  width: 32px;
+  height: 35px;
+  background: url("../../images/twitt_large.png") no-repeat 0 0;
+  background-size: cover;
+}

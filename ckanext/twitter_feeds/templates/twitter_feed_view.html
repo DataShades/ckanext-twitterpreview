@@ -1,21 +1,28 @@
-<h2>{{ resource.twitt_feeds_count }} Twitter Feeds</h2>
-{% for feed in resource.twitt_feeds %}
-    <div style="border-bottom: 1px solid #e1e8ed">
-    <div class="twitter-feeds-content" style="min-height: 55px; margin-left: 55px; margin-top: 10px">
-            <a href="https://twitter.com/{{ feed.user.screen_name }}" target="_blank" style="color: #292f33"s>
-                <img src="{{ feed.user.profile_image_url }}" style="float: left; margin-left: -55px; border-radius: 5px">
-                <strong>{{ feed.user.name }}</strong>
-                <span><s style="text-decoration: none; color: #8899a6">@</s><b style="color: #8899a6; font-weight: normal; font-size: 13px">{{ feed.user.screen_name }}</b></span>
-            </a>
-            <span>{{ h.twitter_feed_date(feed.created_at) }}</span>
-            <div>
-                <a href="https://twitter.com/{{ feed.user.screen_name }}/status/{{ feed.id }}" target="_blank" style="color: #292f33; text-decoration: none">
-                    <p style="font-size: 16px; line-height: 22px; font-weight: 400;">
-                        {{ feed.text }}
-                    </p>
-                </a>
-            </div>
-    </div>        
-    </div>
+{% if resource.twitt_feeds %}
+    <h2>{{ resource.twitt_feeds_count }} Twitter Feeds</h2>
+    {% for feed in resource.twitt_feeds %}
+        <div id="twitt-feed-resource-summary">
+            <div class="twitter-feed-content">
+                    <a class="twitter-feed-user-link" href="https://twitter.com/{{ feed.user.screen_name }}" target="_blank">
+                        <img class="twitter-feed-user-image" src="{{ feed.user.profile_image_url }}">
+                        <strong class="twitter-feed-username-profile">{{ feed.user.name }}</strong>
+                        <span class="twitter-feed-username"><s>@</s><b>{{ feed.user.screen_name }}</b></span>
+                    </a>
+                    <span>{{ h.twitter_feed_date(feed.created_at) }}</span>
+                    <div class="twitter-feed-text-content">
+                        <a class="twitter-feed-post-link" href="https://twitter.com/{{ feed.user.screen_name }}/status/{{ feed.id }}" target="_blank">
+                            <p>
+                                {{ feed.text }}
+                            </p>
+                        </a>
+                    </div>
+            </div>        
+        </div>
 
-{% endfor %}
+    {% endfor %}
+{% else %}
+
+<h3>No Twitts found on <a href="{{ resource['url'] }}">{{ resource['url'] }}.</a>
+<p>Please make sure that the Url is right or it has at least 1 Twitt.</p></h3>
+
+{% endif %}
