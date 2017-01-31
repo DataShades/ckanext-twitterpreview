@@ -7,6 +7,9 @@ import twitter
 from datetime import datetime
 import ckan.logic as logic
 
+from ttp import ttp
+p2 = ttp.Parser()
+
 ignore_empty = p.toolkit.get_validator('ignore_empty')
 DEFAULT_TWIITER_FORMATS = ['twitter feed']
 
@@ -96,17 +99,24 @@ class Twitter_FeedsPlugin(plugins.SingletonPlugin):
                 count=config.get('ckan.twitter.max_feeds_count'))
             for feed in twitter_info:
                 if feed.retweeted_status:
-                    if feed.retweeted_status.media:
-                        text = feed.retweeted_status.text.replace(feed.retweeted_status.media[0].url, '')
-                    if feed.retweeted_status.urls:
-                        text = feed.retweeted_status.text.replace(feed.retweeted_status.urls[0].url, '')
+                        text = feed.retweeted_status.text
                 else:
                     text = feed.text
+
+                if 'https://t.co/' in text:
+                    last_url = text.rsplit('https://t.co/', 1)[1].split()
+                    last_url = last_url[0]
+
+                    if text.endswith(last_url):
+                        last_url = 'https://t.co/' + last_url
+                        text = text.replace(last_url, '')
+
+                complete_text = p2.parse(text)
                 feed = {
                     'id': feed.retweeted_status.id if feed.retweeted_status else feed.id,
                     'created_at': feed.created_at,
                     'retweet_count': feed.retweet_count,
-                    'text': text,
+                    'text': complete_text.html,
                     'user': {
                         'id': feed.retweeted_status.user.id if feed.retweeted_status else feed.user.id,
                         'created_at': feed.retweeted_status.user.created_at if feed.retweeted_status else feed.user.created_at,

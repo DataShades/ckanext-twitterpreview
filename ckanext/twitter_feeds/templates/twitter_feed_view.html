@@ -12,11 +12,11 @@
                     <div class="twitter-feed-text-content">
                         <a class="twitter-feed-post-link" href="https://twitter.com/{{ feed.user.screen_name }}/status/{{ feed.id }}" target="_blank">
                             <p>
-                                {{ feed.text }}
+                                {{ feed.text |safe }}
                             </p>
                         </a>
                     </div>
-            </div>        
+            </div>
         </div>
 
     {% endfor %}
