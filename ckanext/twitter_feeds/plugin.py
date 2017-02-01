@@ -8,6 +8,7 @@ from datetime import datetime
 import ckan.logic as logic
 
 from ttp import ttp
+
 p2 = ttp.Parser()
 
 ignore_empty = p.toolkit.get_validator('ignore_empty')
@@ -49,6 +50,8 @@ class Twitter_FeedsPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IResourceView, inherit=True)
     plugins.implements(plugins.ITemplateHelpers)
 
+    # IResourceController
+
     def before_create(self, context, resource):
         twitter_feed_validation(resource)
 
@@ -67,11 +70,6 @@ class Twitter_FeedsPlugin(plugins.SingletonPlugin):
         toolkit.add_template_directory(config_, 'templates')
         toolkit.add_public_directory(config_, 'public')
         toolkit.add_resource('fanstatic', 'twitter_feeds')
-
-    # IResourceController
-
-    def before_show(self, resource_dict):
-        return resource_dict
 
     # IResourceView
 
@@ -92,13 +90,26 @@ class Twitter_FeedsPlugin(plugins.SingletonPlugin):
     def view_template(self, context, data_dict):
         if data_dict['resource']['format'].lower() in DEFAULT_TWIITER_FORMATS:
             feeds = []
+            exclude_replies = False
+            exclude_retweet = False
+            if config.get('ckan.twitter.include_retweets') == 'True':
+                exclude_retweet = True
+            if config.get('ckan.twitter.exclude_replies') == 'True':
+                exclude_replies = True
+
             screen_name = data_dict['resource']['url'].split('/')
             twitter_info = twitter_api.GetUserTimeline(
                 screen_name=screen_name[3],
                 count=config.get('ckan.twitter.max_feeds_count'),
-                include_rts=False)
+                include_rts=exclude_retweet,
+                exclude_replies=exclude_replies,
+            )
+
             for feed in twitter_info:
                 retweeted = False
+                reply = False
+                if feed.in_reply_to_screen_name:
+                    reply = True
                 if feed.retweeted_status:
                     retweeted = True
                     text = feed.retweeted_status.text
@@ -132,7 +143,8 @@ class Twitter_FeedsPlugin(plugins.SingletonPlugin):
                         'screen_name': feed.retweeted_status.user.screen_name if feed.retweeted_status else feed.user.screen_name,
                         'statuses_count': feed.retweeted_status.user.statuses_count if feed.retweeted_status else feed.user.statuses_count
                     },
-                    'retweeted': retweeted
+                    'retweeted': retweeted,
+                    'reply': reply
                 }
                 feeds.append(feed)
 

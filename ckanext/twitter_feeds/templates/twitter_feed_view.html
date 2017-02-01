@@ -11,15 +11,18 @@
                     </a>
                     <span>{{ h.twitter_feed_date(feed.created_at) }}</span>
                     {% if feed.retweeted %}
-                        <a href="https://twitter.com/{{ feed.user.name }}" target="_blank" class="twitter-feed-retweeted">{{ feed.user.name }} Retweeted</a> 
+                        <a href="https://twitter.com/{{ feed.user.name }}" target="_blank" class="twitter-feed-retweeted">{{ feed.user.name }} Retweeted</a>
+                    {% endif %}
+                    {% if feed.reply %}
+                        <a href="https://twitter.com/{{ feed.user.name }}" target="_blank" class="twitter-feed-retweeted">Reply</a>
                     {% endif %}
                     <div class="twitter-feed-text-content">
                             <p>
                                 {{ feed.text |safe }}
                             </p>
                     </div>
-                        <a class="twitter-feed-post-link" href="https://twitter.com/{{ feed.twitt_info.screen_name }}/status/{{ feed.id }}" target="_blank">See the original Twitt</a>
-                    
+                        <a class="twitter-feed-post-link" href="https://twitter.com/{{ feed.twitt_info.screen_name }}/status/{{ feed.id }}" target="_blank">See the original Tweet</a>
+
             </div>
         </div>
     {% endfor %}
