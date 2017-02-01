@@ -1,24 +1,27 @@
 {% if resource.twitt_feeds %}
-    <h2>{{ resource.twitt_feeds_count }} Twitter Feeds</h2>
+    <h2>{{ resource.twitt_feeds_count }} Twitter feeds found</h2>
     {% for feed in resource.twitt_feeds %}
+
         <div id="twitt-feed-resource-summary">
             <div class="twitter-feed-content">
-                    <a class="twitter-feed-user-link" href="https://twitter.com/{{ feed.user.screen_name }}" target="_blank">
-                        <img class="twitter-feed-user-image" src="{{ feed.user.profile_image_url }}">
-                        <strong class="twitter-feed-username-profile">{{ feed.user.name }}</strong>
-                        <span class="twitter-feed-username"><s>@</s><b>{{ feed.user.screen_name }}</b></span>
+                    <a class="twitter-feed-user-link" href="https://twitter.com/{{ feed.twitt_info.screen_name }}" target="_blank">
+                        <img class="twitter-feed-user-image" src="{{ feed.twitt_info.profile_image_url }}">
+                        <strong class="twitter-feed-username-profile">{{ feed.twitt_info.name }}</strong>
+                        <span class="twitter-feed-username"><s>@</s><b>{{ feed.twitt_info.screen_name }}</b></span>
                     </a>
                     <span>{{ h.twitter_feed_date(feed.created_at) }}</span>
+                    {% if feed.retweeted %}
+                        <a href="https://twitter.com/{{ feed.user.name }}" target="_blank" class="twitter-feed-retweeted">{{ feed.user.name }} Retweeted</a> 
+                    {% endif %}
                     <div class="twitter-feed-text-content">
-                        <a class="twitter-feed-post-link" href="https://twitter.com/{{ feed.user.screen_name }}/status/{{ feed.id }}" target="_blank">
                             <p>
                                 {{ feed.text |safe }}
                             </p>
-                        </a>
                     </div>
+                        <a class="twitter-feed-post-link" href="https://twitter.com/{{ feed.twitt_info.screen_name }}/status/{{ feed.id }}" target="_blank">See the original Twitt</a>
+                    
             </div>
         </div>
-
     {% endfor %}
 {% else %}
 

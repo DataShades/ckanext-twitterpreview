@@ -93,13 +93,15 @@ class Twitter_FeedsPlugin(plugins.SingletonPlugin):
         if data_dict['resource']['format'].lower() in DEFAULT_TWIITER_FORMATS:
             feeds = []
             screen_name = data_dict['resource']['url'].split('/')
-
             twitter_info = twitter_api.GetUserTimeline(
                 screen_name=screen_name[3],
-                count=config.get('ckan.twitter.max_feeds_count'))
+                count=config.get('ckan.twitter.max_feeds_count'),
+                include_rts=False)
             for feed in twitter_info:
+                retweeted = False
                 if feed.retweeted_status:
-                        text = feed.retweeted_status.text
+                    retweeted = True
+                    text = feed.retweeted_status.text
                 else:
                     text = feed.text
 
@@ -118,6 +120,10 @@ class Twitter_FeedsPlugin(plugins.SingletonPlugin):
                     'retweet_count': feed.retweet_count,
                     'text': complete_text.html,
                     'user': {
+                        'name': feed.user.name,
+                        'id': feed.user.id
+                    },
+                    'twitt_info': {
                         'id': feed.retweeted_status.user.id if feed.retweeted_status else feed.user.id,
                         'created_at': feed.retweeted_status.user.created_at if feed.retweeted_status else feed.user.created_at,
                         'description': feed.retweeted_status.user.description if feed.retweeted_status else feed.user.description,
@@ -125,13 +131,13 @@ class Twitter_FeedsPlugin(plugins.SingletonPlugin):
                         'profile_image_url': feed.retweeted_status.user.profile_image_url if feed.retweeted_status else feed.user.profile_image_url,
                         'screen_name': feed.retweeted_status.user.screen_name if feed.retweeted_status else feed.user.screen_name,
                         'statuses_count': feed.retweeted_status.user.statuses_count if feed.retweeted_status else feed.user.statuses_count
-                    }
+                    },
+                    'retweeted': retweeted
                 }
                 feeds.append(feed)
 
             data_dict['resource']['twitt_feeds_count'] = len(twitter_info)
             data_dict['resource']['twitt_feeds'] = feeds
-
         return 'twitter_feed_view.html'
 
     def form_template(self, context, data_dict):

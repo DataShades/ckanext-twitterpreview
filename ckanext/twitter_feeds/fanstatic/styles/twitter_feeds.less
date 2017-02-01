@@ -1,9 +1,27 @@
 #twitt-feed-resource-summary {
-	border-bottom: 1px solid #e1e8ed;
+	border: 1px solid #e1e8ed;
+	border-bottom: none;
+	padding: 0 15px;
+	position: relative;
+	&:last-child {
+		border-bottom: 1px solid #e1e8ed;
+	}
+	&:hover {
+		background-color: #f5f8fa;
+	}
+	.twitter-feed-retweeted {
+		color: #177C17;
+		text-decoration: none;
+		font-size: 13px;
+		font-weight: bold;
+		&:hover {
+			color: #315F09;
+		}
+	}
 	.twitter-feed-content {
 		min-height: 55px;
 		margin-left: 55px;
-		margin-top: 10px;
+		padding: 10px 0;
 		.twitter-feed-user-link {
 			color: #292f33;
 			&:hover {
@@ -32,14 +50,32 @@
 				}
 			}
 		}
+		.twitter-feed-post-link {
+			position: absolute;
+    		right: 13px;
+    		top: 7px;
+			background-color: #1da1f2;
+		    color: #fff;
+		    padding: 2px 6px;
+		    border-radius: 4px;
+		    text-decoration: none;
+		    font-size: 12px;
+		    font-weight: bold;
+		    &:active {
+		    	background-color: #3b88c3;
+		    	color: #333;
+		    }
+		}
 		.twitter-feed-text-content {
-			.twitter-feed-post-link {
-				color: #292f33;
-				text-decoration: none;
-				p {
-					font-size: 16px;
-					line-height: 22px;
-					font-weight: 400;
+			color: #292f33;
+			text-decoration: none;
+			padding-top: 5px;
+			p {
+				font-size: 16px;
+				line-height: 22px;
+				font-weight: 400;
+				a {
+					color: #1b95e0;
 				}
 			}
 		}

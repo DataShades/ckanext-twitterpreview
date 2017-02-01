@@ -4,3 +4,9 @@
   {{ super() }}
   {% resource 'twitter_feeds/styles/twitter_feeds.css' %}
 {% endblock %}
+
+
+{% block scripts %}
+  {{ super() }}
+  {% resource 'twitter_feeds/script/twitter_feeds_post_link.js' %}
+{% endblock %}
