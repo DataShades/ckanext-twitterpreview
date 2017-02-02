@@ -1,5 +1,5 @@
+# CKAN modules
 import ckan.tests.factories as factories
-import nose.tools as nt
 from ckan.tests.helpers import (
     FunctionalTestBase,
     _get_test_app
@@ -7,8 +7,15 @@ from ckan.tests.helpers import (
 from ckan.tests.legacy.pylons_controller import PylonsTestCase
 import ckan.tests.legacy as tests
 import ckan.plugins.toolkit as tk
-from pylons import config
+
+# Nosetests module
+import nose.tools as nt
+
+# Twitter module
 import twitter
+
+# Other modules
+from pylons import config
 
 call_api = tests.call_action_api
 
@@ -19,10 +26,6 @@ class TestTwitterFeeds(PylonsTestCase, FunctionalTestBase):
 
     def setup(self):
         super(TestTwitterFeeds, self).setup()
-        self.sysadmin = factories.Sysadmin()
-
-        self.app = _get_test_app()
-
         self.twitter_api = twitter.api.Api(
             consumer_key=config.get('ckan.twitter.consumer_key'),
             consumer_secret=config.get('ckan.twitter.consumer_secret'),

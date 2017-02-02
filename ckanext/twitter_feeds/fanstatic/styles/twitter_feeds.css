@@ -88,3 +88,11 @@
   background: url("../../images/twitt_large.png") no-repeat 0 0;
   background-size: cover;
 }
+@media (max-width: 767px) {
+  #twitt-feed-resource-summary .twitter-feed-content .twitter-feed-post-link {
+    right: 0;
+    top: 0;
+    padding: 7px 6px;
+    position: relative;
+  }
+}

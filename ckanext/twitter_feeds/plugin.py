@@ -1,18 +1,22 @@
+# CKAN modules
+
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 from ckan import plugins as p
-from pylons import config
-
-import twitter
-from datetime import datetime
 import ckan.logic as logic
 
+# Twitter modules
 from ttp import ttp
+import twitter
+
+# Other modules
+from pylons import config
+from datetime import datetime
 
 p2 = ttp.Parser()
 
 ignore_empty = p.toolkit.get_validator('ignore_empty')
-DEFAULT_TWIITER_FORMATS = ['twitter feed']
+DEFAULT_TWIITER_FORMATS = ['TWITTER FEED']
 
 twitter_api = twitter.api.Api(
     consumer_key=config.get('ckan.twitter.consumer_key'),
@@ -29,14 +33,17 @@ def twitter_feed_date(feed_date):
 
 
 def twitter_feed_validation(resource):
-    screen_name = resource['url'].split('/')
-    if resource['format'].lower() in DEFAULT_TWIITER_FORMATS:
+    if resource['format'].upper() in DEFAULT_TWIITER_FORMATS:
+        resource['format'] = resource['format'].upper()
         if not resource['url'].startswith('https://twitter.com'):
-            message = ['This Url is wrong for this resource format. The Url should match for example: "https://twitter.com/USERNAME"']
-            raise logic.ValidationError({"Twitter": message})
+            if resource['url'].startswith('twitter.com'):
+                resource['url'] = 'https://' + resource['url']
+            else:
+                message = ['This Url is wrong for this resource format. The Url should match the example: "https://twitter.com/USERNAME"']
+                raise logic.ValidationError({"Twitter": message})
         try:
             test = twitter_api.GetUserTimeline(
-                screen_name=screen_name[3],
+                screen_name=resource['url'].rsplit('twitter.com/', 1)[1],
                 count=1)
         except twitter.TwitterError, e:
             for m in e.message:
@@ -84,11 +91,11 @@ class Twitter_FeedsPlugin(plugins.SingletonPlugin):
                 }
 
     def can_view(self, data_dict):
-        return (data_dict['resource'].get('format', '').lower()
+        return (data_dict['resource'].get('format', '').upper()
                 in DEFAULT_TWIITER_FORMATS)
 
     def view_template(self, context, data_dict):
-        if data_dict['resource']['format'].lower() in DEFAULT_TWIITER_FORMATS:
+        if data_dict['resource']['format'].upper() in DEFAULT_TWIITER_FORMATS:
             feeds = []
             exclude_replies = False
             exclude_retweet = False
@@ -97,9 +104,8 @@ class Twitter_FeedsPlugin(plugins.SingletonPlugin):
             if config.get('ckan.twitter.exclude_replies') == 'True':
                 exclude_replies = True
 
-            screen_name = data_dict['resource']['url'].split('/')
             twitter_info = twitter_api.GetUserTimeline(
-                screen_name=screen_name[3],
+                screen_name=data_dict['resource']['url'].rsplit('twitter.com/', 1)[1],
                 count=config.get('ckan.twitter.max_feeds_count'),
                 include_rts=exclude_retweet,
                 exclude_replies=exclude_replies,

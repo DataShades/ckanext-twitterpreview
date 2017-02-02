@@ -1,166 +1,62 @@
-.. You should enable this project on travis-ci.org and coveralls.io to make
-   these badges work. The necessary Travis and Coverage config files have been
-   generated for you.
-
-.. image:: https://travis-ci.org//ckanext-twitter_feeds.svg?branch=master
-    :target: https://travis-ci.org//ckanext-twitter_feeds
-
-.. image:: https://coveralls.io/repos//ckanext-twitter_feeds/badge.svg
-  :target: https://coveralls.io/r//ckanext-twitter_feeds
-
-.. image:: https://pypip.in/download/ckanext-twitter_feeds/badge.svg
-    :target: https://pypi.python.org/pypi//ckanext-twitter_feeds/
-    :alt: Downloads
-
-.. image:: https://pypip.in/version/ckanext-twitter_feeds/badge.svg
-    :target: https://pypi.python.org/pypi/ckanext-twitter_feeds/
-    :alt: Latest Version
-
-.. image:: https://pypip.in/py_versions/ckanext-twitter_feeds/badge.svg
-    :target: https://pypi.python.org/pypi/ckanext-twitter_feeds/
-    :alt: Supported Python versions
-
-.. image:: https://pypip.in/status/ckanext-twitter_feeds/badge.svg
-    :target: https://pypi.python.org/pypi/ckanext-twitter_feeds/
-    :alt: Development Status
-
-.. image:: https://pypip.in/license/ckanext-twitter_feeds/badge.svg
-    :target: https://pypi.python.org/pypi/ckanext-twitter_feeds/
-    :alt: License
-
-=============
 ckanext-twitter_feeds
 =============
 
-.. Put a description of your extension here:
-   What does it do? What features does it have?
-   Consider including some screenshots or embedding a video!
+
+Installing
+----------
+
+To install the extension::
+
+    $ git clone git@git.links.com.au:yrudenko/ckanext-twitter_feeds.git
+    $ . /usr/lib/ckan/default/bin/activate
+    $ python setup.py develop
+    $ pip install -r requirements.txt
+
+To activate it::
+
+    Add it to the ckan.plugins in config file: ckan.plugins = twitter_feeds
+
+    Add to the default_views filed in config file: ckan.views.default_views = twitter_feed_view
+
+Add settings to config::
+
+    ckan.twitter.consumer_key = your_consumer_key
+    ckan.twitter.consumer_secret = your_consumer_secret
+    ckan.twitter.access_token_key = your_access_token_key
+    ckan.twitter.access_token_secret = your_access_token_secret
+    ckan.twitter.max_feeds_count = 10 (The number is tweets you want to display, max 200)
+    ckan.twitter.include_retweets= True (If you want to exclude retweets change from True to False)
+    ckan.twitter.exclude_replies = False (If you want to exclude retweets change from False to True)
+
+To generate your keys, first signup at https://twitter.com/signup and create your App at https://apps.twitter.com/. Click the “Create New App” button and fill out the fields.
+After creating App you will see the App information. Click on the “Keys and Access Tokens” tab on the top there, generate all needed keys and copy them to your config file.
 
 
-------------
-Requirements
-------------
-
-For example, you might want to mention here which versions of CKAN this
-extension works with.
-
-
-------------
-Installation
-------------
-
-.. Add any additional install steps to the list below.
-   For example installing any non-Python dependencies or adding any required
-   config settings.
-
-To install ckanext-twitter_feeds:
-
-1. Activate your CKAN virtual environment, for example::
-
-     . /usr/lib/ckan/default/bin/activate
-
-2. Install the ckanext-twitter_feeds Python package into your virtual environment::
-
-     pip install ckanext-twitter_feeds
-
-3. Add ``twitter_feeds`` to the ``ckan.plugins`` setting in your CKAN
-   config file (by default the config file is located at
-   ``/etc/ckan/default/production.ini``).
-
-4. Restart CKAN. For example if you've deployed CKAN with Apache on Ubuntu::
-
-     sudo service apache2 reload
-
-
----------------
-Config Settings
----------------
-
-Document any optional config settings here. For example::
-
-    # The minimum number of hours to wait before re-checking a resource
-    # (optional, default: 24).
-    ckanext.twitter_feeds.some_setting = some_default_value
-
-
-------------------------
-Development Installation
-------------------------
-
-To install ckanext-twitter_feeds for development, activate your CKAN virtualenv and
-do::
-
-    git clone https://github.com//ckanext-twitter_feeds.git
-    cd ckanext-twitter_feeds
-    python setup.py develop
-    pip install -r dev-requirements.txt
-
-
------------------
-Running the Tests
+Creating resource
 -----------------
 
-To run the tests, do::
-
-    nosetests --nologcapture --with-pylons=test.ini
-
-To run the tests and produce a coverage report, first make sure you have
-coverage installed in your virtualenv (``pip install coverage``) then run::
-
-    nosetests --nologcapture --with-pylons=test.ini --with-coverage --cover-package=ckanext.twitter_feeds --cover-inclusive --cover-erase --cover-tests
+To create a twitter resource, at the resource create form enter ```twitter feed``` at Format field and ```https://twitter.com/USERNAME``` at URL field, where USERNAME is name of the person or group you want to get infromation from, for exmaple: https://twitter.com/ckanproject
 
 
----------------------------------
-Registering ckanext-twitter_feeds on PyPI
----------------------------------
+Testing
+-------
 
-ckanext-twitter_feeds should be availabe on PyPI as
-https://pypi.python.org/pypi/ckanext-twitter_feeds. If that link doesn't work, then
-you can register the project on PyPI for the first time by following these
-steps:
+Proceed with the instructions at http://docs.ckan.org/en/latest/contributing/test.html in Set up the test databases section.
 
-1. Create a source distribution of the project::
+After creating Test Databases, at CKAN test-core.ini file::
+    
+    Change the password for ```sqlalchemy.url``` field to connect the DB while testing.
 
-     python setup.py sdist
+Add in test.ini file (file in extension)::
 
-2. Register the project::
+    ckan.twitter.consumer_key = your_consumer_key
+    ckan.twitter.consumer_secret = your_consumer_secret
+    ckan.twitter.access_token_key = your_access_token_key
+    ckan.twitter.access_token_secret = your_access_token_secret
+    ckan.twitter.max_feeds_count = 10 (The number is tweets you want to display, max 200)
 
-     python setup.py register
+    Set the right use = config:/usr/lib/ckan/default/src/ckan/test-core.ini path to test-core.ini
 
-3. Upload the source distribution to PyPI::
+Run the command from extension directory::
 
-     python setup.py sdist upload
-
-4. Tag the first release of the project on GitHub with the version number from
-   the ``setup.py`` file. For example if the version number in ``setup.py`` is
-   0.0.1 then do::
-
-       git tag 0.0.1
-       git push --tags
-
-
-----------------------------------------
-Releasing a New Version of ckanext-twitter_feeds
-----------------------------------------
-
-ckanext-twitter_feeds is availabe on PyPI as https://pypi.python.org/pypi/ckanext-twitter_feeds.
-To publish a new version to PyPI follow these steps:
-
-1. Update the version number in the ``setup.py`` file.
-   See `PEP 440 <http://legacy.python.org/dev/peps/pep-0440/#public-version-identifiers>`_
-   for how to choose version numbers.
-
-2. Create a source distribution of the new version::
-
-     python setup.py sdist
-
-3. Upload the source distribution to PyPI::
-
-     python setup.py sdist upload
-
-4. Tag the new release of the project on GitHub with the version number from
-   the ``setup.py`` file. For example if the version number in ``setup.py`` is
-   0.0.2 then do::
-
-       git tag 0.0.2
-       git push --tags
+    nosetests --with-pylons=test.ini --nologcapture --rednose -s -x -v --reset-db

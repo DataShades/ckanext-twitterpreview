@@ -1,5 +1,5 @@
 {% if resource.twitt_feeds %}
-    <h2>{{ resource.twitt_feeds_count }} Twitter feeds found</h2>
+    <h2>{{ resource.twitt_feeds_count }} Tweets found</h2>
     {% for feed in resource.twitt_feeds %}
 
         <div id="twitt-feed-resource-summary">
@@ -28,7 +28,7 @@
     {% endfor %}
 {% else %}
 
-<h3>No Twitts found on <a href="{{ resource['url'] }}">{{ resource['url'] }}.</a>
-<p>Please make sure that the Url is right or it has at least 1 Twitt.</p></h3>
+<h3>No Tweets found on <a href="{{ resource['url'] }}">{{ resource['url'] }}.</a>
+<p>Please make sure that the Url is right or it has at least 1 Tweet.</p></h3>
 
 {% endif %}
