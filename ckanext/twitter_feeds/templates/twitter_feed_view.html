@@ -11,10 +11,10 @@
                     </a>
                     <span>{{ h.twitter_feed_date(feed.created_at) }}</span>
                     {% if feed.retweeted %}
-                        <a href="https://twitter.com/{{ feed.user.name }}" target="_blank" class="twitter-feed-retweeted">{{ feed.user.name }} Retweeted</a>
+                        <a href="https://twitter.com/{{ feed.user.screen_name }}" target="_blank" class="twitter-feed-retweeted">{{ feed.user.name }} Retweeted</a>
                     {% endif %}
                     {% if feed.reply %}
-                        <a href="https://twitter.com/{{ feed.user.name }}" target="_blank" class="twitter-feed-retweeted">Reply</a>
+                        <a href="https://twitter.com/{{ feed.user.screen_name }}" target="_blank" class="twitter-feed-retweeted">Reply</a>
                     {% endif %}
                     <div class="twitter-feed-text-content">
                             <p>

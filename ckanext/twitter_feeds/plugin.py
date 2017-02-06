@@ -138,7 +138,8 @@ class Twitter_FeedsPlugin(plugins.SingletonPlugin):
                     'text': complete_text.html,
                     'user': {
                         'name': feed.user.name,
-                        'id': feed.user.id
+                        'id': feed.user.id,
+                        'screen_name': feed.user.screen_name
                     },
                     'twitt_info': {
                         'id': feed.retweeted_status.user.id if feed.retweeted_status else feed.user.id,
