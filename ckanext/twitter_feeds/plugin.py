@@ -39,7 +39,8 @@ def twitter_feed_validation(resource):
             if resource['url'].startswith('twitter.com'):
                 resource['url'] = 'https://' + resource['url']
             else:
-                message = ['This Url is wrong for this resource format. The Url should match the example: "https://twitter.com/USERNAME"']
+                message = [
+                    'This Url is wrong for this resource format. The Url should match the example: "https://twitter.com/USERNAME"']
                 raise logic.ValidationError({"Twitter": message})
         try:
             test = twitter_api.GetUserTimeline(
@@ -64,6 +65,8 @@ class Twitter_FeedsPlugin(plugins.SingletonPlugin):
 
     def before_update(self, context, current, resource):
         twitter_feed_validation(resource)
+
+    # ITemplateHelpers
 
     def get_helpers(self):
         return {
@@ -105,7 +108,8 @@ class Twitter_FeedsPlugin(plugins.SingletonPlugin):
                 exclude_replies = True
 
             twitter_info = twitter_api.GetUserTimeline(
-                screen_name=data_dict['resource']['url'].rsplit('twitter.com/', 1)[1],
+                screen_name=data_dict['resource'][
+                    'url'].rsplit('twitter.com/', 1)[1],
                 count=config.get('ckan.twitter.max_feeds_count'),
                 include_rts=exclude_retweet,
                 exclude_replies=exclude_replies,
@@ -132,7 +136,9 @@ class Twitter_FeedsPlugin(plugins.SingletonPlugin):
 
                 complete_text = p2.parse(text)
                 feed = {
-                    'id': feed.retweeted_status.id if feed.retweeted_status else feed.id,
+                    'id': (
+                        feed.retweeted_status.id if
+                        feed.retweeted_status else feed.id),
                     'created_at': feed.created_at,
                     'retweet_count': feed.retweet_count,
                     'text': complete_text.html,
@@ -142,13 +148,27 @@ class Twitter_FeedsPlugin(plugins.SingletonPlugin):
                         'screen_name': feed.user.screen_name
                     },
                     'twitt_info': {
-                        'id': feed.retweeted_status.user.id if feed.retweeted_status else feed.user.id,
-                        'created_at': feed.retweeted_status.user.created_at if feed.retweeted_status else feed.user.created_at,
-                        'description': feed.retweeted_status.user.description if feed.retweeted_status else feed.user.description,
-                        'name': feed.retweeted_status.user.name if feed.retweeted_status else feed.user.name,
-                        'profile_image_url': feed.retweeted_status.user.profile_image_url if feed.retweeted_status else feed.user.profile_image_url,
-                        'screen_name': feed.retweeted_status.user.screen_name if feed.retweeted_status else feed.user.screen_name,
-                        'statuses_count': feed.retweeted_status.user.statuses_count if feed.retweeted_status else feed.user.statuses_count
+                        'id': (
+                            feed.retweeted_status.user.id if
+                            feed.retweeted_status else feed.user.id),
+                        'created_at': (
+                            feed.retweeted_status.user.created_at if
+                            feed.retweeted_status else feed.user.created_at),
+                        'description': (
+                            feed.retweeted_status.user.description if
+                            feed.retweeted_status else feed.user.description),
+                        'name': (
+                            feed.retweeted_status.user.name if
+                            feed.retweeted_status else feed.user.name),
+                        'profile_image_url': (
+                            feed.retweeted_status.user.profile_image_url if
+                            feed.retweeted_status else feed.user.profile_image_url),
+                        'screen_name': (
+                            feed.retweeted_status.user.screen_name if
+                            feed.retweeted_status else feed.user.screen_name),
+                        'statuses_count': (
+                            feed.retweeted_status.user.statuses_count if
+                            feed.retweeted_status else feed.user.statuses_count)
                     },
                     'retweeted': retweeted,
                     'reply': reply
