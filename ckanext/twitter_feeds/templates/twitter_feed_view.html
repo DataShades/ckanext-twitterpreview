@@ -1,34 +1,11 @@
-{% if resource.twitt_feeds %}
-    <h2>{{ resource.twitt_feeds_count }} Tweets found</h2>
-    {% for feed in resource.twitt_feeds %}
 
-        <div id="twitt-feed-resource-summary">
-            <div class="twitter-feed-content">
-                    <a class="twitter-feed-user-link" href="https://twitter.com/{{ feed.twitt_info.screen_name }}" target="_blank">
-                        <img class="twitter-feed-user-image" src="{{ feed.twitt_info.profile_image_url }}">
-                        <strong class="twitter-feed-username-profile">{{ feed.twitt_info.name }}</strong>
-                        <span class="twitter-feed-username"><s>@</s><b>{{ feed.twitt_info.screen_name }}</b></span>
-                    </a>
-                    <span>{{ h.twitter_feed_date(feed.created_at) }}</span>
-                    {% if feed.retweeted %}
-                        <a href="https://twitter.com/{{ feed.user.screen_name }}" target="_blank" class="twitter-feed-retweeted">{{ feed.user.name }} Retweeted</a>
-                    {% endif %}
-                    {% if feed.reply %}
-                        <a href="https://twitter.com/{{ feed.user.screen_name }}" target="_blank" class="twitter-feed-retweeted">Reply</a>
-                    {% endif %}
-                    <div class="twitter-feed-text-content">
-                            <p>
-                                {{ feed.text |safe }}
-                            </p>
-                    </div>
-                        <a class="twitter-feed-post-link" href="https://twitter.com/{{ feed.twitt_info.screen_name }}/status/{{ feed.id }}" target="_blank">See the original Tweet</a>
-
-            </div>
-        </div>
-    {% endfor %}
-{% else %}
-
-<h3>No Tweets found on <a href="{{ resource['url'] }}">{{ resource['url'] }}.</a>
-<p>Please make sure that the Url is right or it has at least 1 Tweet.</p></h3>
-
+{% if resource.count_tweets %}
+    <h1>{{ resource.count_tweets }} latest Tweets</h1>
 {% endif %}
+<a class="twitter-timeline" href="https://twitter.com/{{ resource.user_screen_name }}"
+    {% if resource.count_tweets %} data-tweet-limit="{{ resource.count_tweets }}" {% endif %}
+    {% if resource.tweet_replies %} data-show-replies="true" {% endif %}>
+    Tweets by {{ resource.user_screen_name }}
+</a>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
