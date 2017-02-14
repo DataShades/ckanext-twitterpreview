@@ -10,7 +10,6 @@ To install the extension::
     $ git clone git@git.links.com.au:yrudenko/ckanext-twitter_feeds.git
     $ . /usr/lib/ckan/default/bin/activate
     $ python setup.py develop
-    $ pip install -r requirements.txt
 
 To activate it::
 
@@ -22,10 +21,6 @@ To activate it::
 
       ckan.twitter.max_feeds_count = 10 (If the value is not setup, it will show 20 by default and Load more button will appear under the laster tweet)
       ckan.twitter.exclude_replies = False (If you want to exclude retweets change from False to True)
-
-To generate your keys, first signup at https://twitter.com/signup and create your App at https://apps.twitter.com/. Click the “Create New App” button and fill out the fields.
-After creating App you will see the App information. Click on the “Keys and Access Tokens” tab on the top there, generate all needed keys and copy them to your config file.
-
 
 Creating resource
 -----------------
