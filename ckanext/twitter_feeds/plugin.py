@@ -17,7 +17,11 @@ def twitter_feed_validation(resource):
                 resource['url'] = 'https://' + resource['url']
             else:
                 message = [
-                    'This Url is wrong for this resource format. The Url should match the example: "https://twitter.com/USERNAME"']
+                    (
+                        'This Url is wrong for this resource format.'
+                        ' The Url should match the example: '
+                        "https://twitter.com/USERNAME"
+                    )]
                 raise logic.ValidationError({"Twitter": message})
 
 
@@ -67,10 +71,8 @@ class Twitter_FeedsPlugin(plugins.SingletonPlugin):
 
     def view_template(self, context, data_dict):
         if data_dict['resource']['format'].upper() in DEFAULT_TWIITER_FORMATS:
-            replies = False
-            if config.get('ckan.twitter.exclude_replies') == 'True':
-                replies = True
-
+            replies = toolkit.asbool(
+                config.get('ckan.twitter.exclude_replies', False))
             data_dict['resource']['count_tweets'] = config.get(
                 'ckan.twitter.max_feeds_count')
             user_screen_name = data_dict['resource'][

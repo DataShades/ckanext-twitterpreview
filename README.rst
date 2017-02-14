@@ -20,12 +20,7 @@ To activate it::
 
     Add settings to config:
 
-      ckan.twitter.consumer_key = your_consumer_key
-      ckan.twitter.consumer_secret = your_consumer_secret
-      ckan.twitter.access_token_key = your_access_token_key
-      ckan.twitter.access_token_secret = your_access_token_secret
-      ckan.twitter.max_feeds_count = 10 (The number is tweets you want to display, max 200)
-      ckan.twitter.include_retweets= True (If you want to exclude retweets change from True to False)
+      ckan.twitter.max_feeds_count = 10 (If the value is not setup, it will show 20 by default and Load more button will appear under the laster tweet)
       ckan.twitter.exclude_replies = False (If you want to exclude retweets change from False to True)
 
 To generate your keys, first signup at https://twitter.com/signup and create your App at https://apps.twitter.com/. Click the “Create New App” button and fill out the fields.
@@ -49,11 +44,8 @@ After creating Test Databases, at CKAN test-core.ini file::
 
 Add in test.ini file (file in extension)::
 
-    ckan.twitter.consumer_key = your_consumer_key
-    ckan.twitter.consumer_secret = your_consumer_secret
-    ckan.twitter.access_token_key = your_access_token_key
-    ckan.twitter.access_token_secret = your_access_token_secret
-    ckan.twitter.max_feeds_count = 10 (The number is tweets you want to display, max 200)
+    ckan.twitter.max_feeds_count = 10 (If the value is not setup, it will show 20 by default and Load more button will appear under the last tweet)
+    ckan.twitter.exclude_replies = False (If you want to exclude retweets change from False to True)
 
     Set the right use = config:/usr/lib/ckan/default/src/ckan/test-core.ini path to test-core.ini
 
