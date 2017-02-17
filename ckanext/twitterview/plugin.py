@@ -18,11 +18,11 @@ def twitter_feed_validation(resource):
             else:
                 message = [
                     (
-                        'This Url is wrong for this resource format.'
-                        ' The Url should match the example: '
+                        'The URL doesn\'t appear to be a Twitter feed.'
+                        ' It should have the same form as: '
                         "https://twitter.com/USERNAME"
                     )]
-                raise logic.ValidationError({"Twitter": message})
+                raise logic.ValidationError({"URL": message})
 
 
 class Twitter_FeedsPlugin(plugins.SingletonPlugin):
