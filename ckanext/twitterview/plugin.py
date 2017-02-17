@@ -57,7 +57,7 @@ class Twitter_FeedsPlugin(plugins.SingletonPlugin):
 
     def info(self):
         return {'name': 'twitter_view',
-                'title': p.toolkit._('Twitter feeds'),
+                'title': p.toolkit._('Latest tweets'),
                 'icon': 'picture',
                 'schema': {'twitter_url': [ignore_empty, unicode]},
                 'iframed': False,
