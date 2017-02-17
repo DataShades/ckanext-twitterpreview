@@ -6,11 +6,11 @@ import ckan.logic as logic
 from pylons import config
 
 ignore_empty = p.toolkit.get_validator('ignore_empty')
-DEFAULT_TWIITER_FORMATS = ['TWITTER FEED']
+DEFAULT_TWITTER_FORMATS = ['TWITTER FEED']
 
 
 def twitter_feed_validation(resource):
-    if resource['format'].upper() in DEFAULT_TWIITER_FORMATS:
+    if resource['format'].upper() in DEFAULT_TWITTER_FORMATS:
         resource['format'] = resource['format'].upper()
         if not resource['url'].startswith('https://twitter.com'):
             if resource['url'].startswith('twitter.com'):
@@ -67,10 +67,10 @@ class Twitter_FeedsPlugin(plugins.SingletonPlugin):
 
     def can_view(self, data_dict):
         return (data_dict['resource'].get('format', '').upper()
-                in DEFAULT_TWIITER_FORMATS)
+                in DEFAULT_TWITTER_FORMATS)
 
     def view_template(self, context, data_dict):
-        if data_dict['resource']['format'].upper() in DEFAULT_TWIITER_FORMATS:
+        if data_dict['resource']['format'].upper() in DEFAULT_TWITTER_FORMATS:
             replies = toolkit.asbool(
                 config.get('ckan.twitter.exclude_replies', False))
             data_dict['resource']['count_tweets'] = config.get(
