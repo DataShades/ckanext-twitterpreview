@@ -10,18 +10,18 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='''ckanext-twitter_feeds''',
+    name='''ckanext-twitterview''',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # http://packaging.python.org/en/latest/tutorial.html#version
     version='0.0.1',
 
-    description='''Twitter feeds''',
+    description='''A CKAN extension for previewing Twitter feed resources.''',
     long_description=long_description,
 
     # The project's main homepage.
-    url='https://github.com//ckanext-twitter_feeds',
+    url='https://github.com/DataShades/ckanext-twitterview',
 
     # Author details
     author='''Yan''',
@@ -79,7 +79,7 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points='''
         [ckan.plugins]
-        twitter_feeds=ckanext.twitter_feeds.plugin:Twitter_FeedsPlugin
+        twitter_view=ckanext.twitterview.plugin:Twitter_FeedsPlugin
 	[babel.extractors]
 	ckan = ckan.lib.extract:extract_ckan
     ''',

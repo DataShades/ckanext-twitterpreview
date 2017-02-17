@@ -51,12 +51,12 @@ class Twitter_FeedsPlugin(plugins.SingletonPlugin):
     def update_config(self, config_):
         toolkit.add_template_directory(config_, 'templates')
         toolkit.add_public_directory(config_, 'public')
-        toolkit.add_resource('fanstatic', 'twitter_feeds')
+        toolkit.add_resource('fanstatic', 'twitterview')
 
     # IResourceView
 
     def info(self):
-        return {'name': 'twitter_feed_view',
+        return {'name': 'twitter_view',
                 'title': p.toolkit._('Twitter feeds'),
                 'icon': 'picture',
                 'schema': {'twitter_url': [ignore_empty, unicode]},

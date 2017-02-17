@@ -27,7 +27,7 @@ cd ckan
 paster db init -c test-core.ini
 cd -
 
-echo "Installing ckanext-twitter_feeds and its requirements..."
+echo "Installing ckanext-twitterview and its requirements..."
 python setup.py develop
 pip install -r dev-requirements.txt
 

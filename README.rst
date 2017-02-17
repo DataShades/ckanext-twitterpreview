@@ -14,9 +14,9 @@ To install the extension::
 
 To activate it::
 
-    Add it to the ckan.plugins in config file: ckan.plugins = twitter_feeds
+    Add it to the ckan.plugins in config file: ckan.plugins = twitter_view
 
-    Add to the default_views field in config file: ckan.views.default_views = twitter_feed_view
+    Add to the default_views field in config file: ckan.views.default_views = twitter_view
 
     Add settings to config:
 
